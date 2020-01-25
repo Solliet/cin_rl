@@ -33,17 +33,3 @@ def get_last_dim(module: nn.Module):
 
 def get_device(module: nn.Module):
     return next(module.parameters()).device
-
-
-class ActorCritic(nn.Module):
-    def __init__(self, common, critic, actor):
-        super(ActorCritic, self).__init__()
-        self.common = common
-        self.critic = critic
-        self.actor = actor
-    
-    def forward(self, obs):
-        l = self.common(obs)
-        return self.critic(l), self.actor(l)
-
-
