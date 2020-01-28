@@ -4,20 +4,24 @@ import itertools
 
 Experience = namedtuple("Experience", ["obs", "action", "reward", "newobs", "done"])
 
-def episode_runner(envfn, f):
+def episode_runner(envfn, f, render=False):
     env = envfn()
     while True:
         history = []
         done = False
         obs = env.reset()
         while not done:
+            render and env.render()
             action = f(obs)
             nobs, reward, done, _ = env.step(action)
             history.append(Experience(obs, action, reward, nobs, done))
             obs = nobs
+        render and env.render()
         yield Experience(*map(np.array, zip(*history)))
         del history[:]
 
+def run_single(envfn, f):
+    return next(episode_runner(envfn, f))
 
 def nstep_runner(envfn, f, steps):
     env = envfn()
